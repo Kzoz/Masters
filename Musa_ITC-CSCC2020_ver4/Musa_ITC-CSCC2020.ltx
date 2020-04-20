@@ -1,0 +1,287 @@
+\documentclass[10pt,twocolumn]{conference}
+\usepackage[dvipdfm]{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsxtra}
+\usepackage{times}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{footnote}
+\usepackage{url}
+%\setlength{\voffset}{-2.0cm}
+%\setlength{\hoffset}{-1cm}
+
+\begin{document}
+
+\title{\bf A Machine Learning Approach to Okra Detection and Classification}
+
+\author{DIOP Papa Moussa$^1$ and NAKAMURA Morikazu$^2$ \\
+\normalsize 
+$^1$ $^2$Graduate School of Engineering and Science, University of the Ryukyus \\
+1 Senbaru, Nishihara-cho, Nakagami-gun, Okinawa, 903-0213 Japan \\
+E-mail : $^1$d.pape.moussa@tutanota.com, $^2$morikazu@ie.u-ryukyu.ac.jp}
+
+\maketitle
+
+\thispagestyle{empty}
+
+\begin{abstract}
+
+Multiple machine learning techniques have been used for image classification purposes in agriculture. They can be applied to either roots, leaves or plants’ detection and classification in order to assist farmers tasks. This paper aims to propose alternatives or solutions to post-harvest manual classification of okras by Japanese farmers in Okinawa. Thus, we implement Deep Learning to classify okras into categories pre-established by the Japan Agricultural Cooperatives. The classification features of okras in this study are their length and shape, and they classified into two: Class A and B. A set of pre-processing layers such as background noise cancellation, gray scaling and enhancement, image resizing and reconstruction are utilized to provide a higher detection rate. Moreover, a Convolutional Neural Network (CNN) is implemented to detect the patterns and predict the outputs. 
+
+\end{abstract}
+
+%\begin{keyword}	
+%machine learning, classification, prediction, okra, plants, CNN
+%\end{keyword}
+
+\maketitle	
+
+\section{Introduction}
+
+In recent years, the classification techniques through Artificial Intelligence have been playing 
+a very important role in the agricultural field. Not only does it help detecting plant and soil diseases
+but also it does help optimizing the harvest and economic outputs as well \cite{bib5} \cite{bib7} \cite{bib8}.
+Machine Learning integrated with Deep Learning has been largely used 
+to detect, classify or predict plants’ maladies\cite{bib1} \cite{bib2} \cite{bib3} \cite{bib6}and soil quality, develop “techniques” to optimize
+watering and fertilizer adequate amount, and predict the best weather conditions to cultivate plants according 
+to their physiological properties.
+  
+  
+  This current study aims to develop a Machine Learning based techniques combined with few 
+preprocessing layers to classify post-harvest okras. To better target customers and optimize the economical 
+output, farmers need to classify, mostly manually, their products into different pre-established classes.
+The features used to classify products differ from plants, however they mainly turn around the color,
+the shape, the length and the size of products \cite{bib2} \cite{bib4} .
+  
+  
+  In this research, we focus on the classification of okras into 2 classes: Class A and Class B. They can
+be differentiated according to their shape and length. (class B $<$ 13cm $\geq$ Class A). 
+As in Figure ~\ref{fig:visualdiff} and ~\ref{fig:visuald}, the shape of okras potentially plays an important role
+in the differentiation of the 2 categories. So does the length however as a more subtile mean.
+We gathered a total of 9750 images for the 2 classes and use, at first, multiple layers or preprocessing to reduce the 
+excessive background noises, crop unnecessary parts of images (background), then resize the images.
+Then, we utilize a Convolutional Neural Network with multiple layers to predict the outputs of each image.
+This study
+demonstrates the potential of Machine Learning techniques for the automatic detection 
+and classification of okras in Section 4, presents the relevance of automatic classification of post-harvest okras in section 5 by 
+elaborating the preprocess steps in Section 3, then discussing the results before the conclusion in the last section.
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.2]{imgs/A1.jpeg}
+\end{center}
+\begin{center}
+\includegraphics[scale=0.2]{imgs/B1.jpeg}
+\end{center}
+\caption{ Visual Difference between A(top) and B(bottom) }
+\label{fig:visualdiff}
+\end{figure}
+
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.2]{imgs/A2.jpeg}
+\end{center}
+\begin{center}
+\includegraphics[scale=0.2]{imgs/B2.jpeg}
+\end{center}
+\caption{Visual Difference between A(top) and B(bottom)}
+\label{fig:visuald}
+\end{figure}
+
+\section{Background}
+
+This study is part of a bigger vision of contributing to the technological advance of Agriculture in Africa, particularly in Senegal. Senegal’s economy is strongly based on agriculture. Near 70\% of the working working force is in some way related to the agricultural field. Agriculture in Senegal is mainly based in the production of groundnuts; peanut production being its engine since the 60s. The west African country used to be the World’s first producer of peanut with 25\% of the world's peanut production during that time. However, due to a lack of significant scientific advancement, irregular raining season, plant maladies and poor irrigation systems, Senegal never went beyond producing more than 1 million tons of peanut in a  year and saw other countries like the United States, Nigeria or China increasing their production over the years. 
+This study aims to bring, through an optimized preprocessing and CNN, a solution to the detection and classification issues of plants, furthermore to groundnuts maladies detection and prediction. Because of a lack of groundnuts data, we conduct the study using okra classification as means of showing the viability and potential of Deep Learning use to classify plants with similar features; especially considering the fact that some groundnuts maladies share similar patterns. The same techniques used in this study will serve as foundation for the next study which will focus on plants maladies’ recognition and classification.
+
+
+\section{Preprocessing}
+
+The preprocessing being the first stage of this research consists of 3 steps that are detailed in the following subsections.
+
+\subsection{Image Cropping and Reshaping}
+
+As in Figure ~\ref{fig:visualdiff}, ~\ref{fig:visuald} and ~\ref{fig:cropping}, the okras 
+consists of less than 30\% of the input data. Moreover,  in 80 \% of images, 
+the okra are horizontal while the rest remains vertical. Therefore, there is a need of 
+matching images' position before removing the background noise then reshape 
+all images on a common set of coordinates. In that way, 
+the first step of this preprocessing consists of simply rotating vertical okra to horizontal.
+The second step consists of calculating each image's extreme points, meaning 
+one point for each side of the okra (left, top, right and bottom). And from those point we calculated the center point 
+of each okra.
+Finally, in order to unify the size of the okras  for a faster process, 
+we calculated the largest point interval of each axis $(x, y)$ from all images and attributed it every images. 
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.2]{imgs/B_07_03_02_261.jpg}
+\end{center}
+\begin{center}
+\includegraphics[scale=0.4]{imgs/IMG_0838.jpg}
+\end{center}
+\caption{Image Cropping Process}
+\label{fig:cropping}
+\end{figure}
+
+
+\subsection{Image Resizing}
+
+The cropped and reshaped images in the Class A and Class B are respectively(476.5 x 465.5) and (498.5 x 468).
+The images have been resized to 1/10 on both axis. Class A = (47.65 x 46.55) Class B = (49.85 x 46.8).
+Image resizing has as purpose to decrease the process time by lowering the amount data (pixels) being fed to the convolutional 
+neural network.
+
+\subsection{Background Noise Removal}
+Most of images used in this study include noises.
+Noises include okra shades, borders and other background noises. In order to remove a maximum of those noises,
+we proceeded as follow: 
+\\1. grayscaling (Figure ~\ref{fig:resize})
+\\2. color inversion and binary enhancement (Figure ~\ref{fig:enhance})
+\\3. substitution of shape by image(Figure ~\ref{fig:substitution})
+
+\begin{figure} [b]
+\begin{center}
+\includegraphics[scale=0.4]{imgs/initialimg.png}
+\end{center}
+\caption{Initial Image}
+\label{fig:initial}
+\end{figure}
+
+\begin{figure} [b]
+\begin{center}
+\includegraphics[scale=0.4]{imgs/resizedimg.png}
+\end{center}
+\caption{Image Resized}
+\label{fig:resize}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.4]{imgs/enhancedimg.png}
+\end{center}
+\caption{Grayscaling \& Binary Enhancement}
+\label{fig:enhance}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.4]{imgs/substitute.png}
+\end{center}
+\caption{Substitution}
+\label{fig:substitution}
+\end{figure}
+\section{Classification}
+
+The classification algorithm used in this research is the Convolutional Neural Networks (CNN).
+The CNN implements Deep Learning to Machine Learning processing \cite{bib6} in the ultimate goal of
+classifying images without any user interaction. It has a set of multiple layers connected between them and can be composed 
+of different types of layers such as convolutional layers, fully connected layers, pooling layers etc. 
+
+\subsection{Convolutional Neural Network(CNN)}
+
+The classification algorithm used in this research is the Convolutional Neural Networks (CNN).
+The CNN implements Deep Learning to Machine Learning processing \cite{bib6} in the ultimate goal of
+classifying images without any user interaction. It has a set of multiple layers connected between them and can be composed 
+of different types of layers such as convolutional layers, fully connected layers, pooling layers etc. 
+
+
+The proposed CNN in this study is structured as follow: Input, Hidden Layer1, Hidden Layer2, Output. 
+The input is the first layer of the CNN architecture and the raw data was fed to the network through this layer. 
+The input image size is 46 x 47 x 3. It is followed by 2 convolutional layers.
+The convolutional layers are used to detect and extract features within the images.
+Both the first and second convolutional layer share the same filter architecture, 32 different 3 x 3 filter. 
+The rectified linear unit layer (ReLU) comes after each convolution layers and is known as 
+the most commonly used rectifier unit for neuron outputs. \cite{bib4}
+After the ReLu, is placed a pooling(max-pool is 2 x 2 in this study ) which contributes 
+in the reduction of the input size(width x height) for the following convolutional layer. 
+We utilize a "Sigmoid" function as an activation function of the neural network within the last layer in order to determine the final output.
+
+
+\section{Experimental Evaluation}
+
+Training samples improve model performance in disease detection \cite{bib1}. For this reason 80\% of okras are used for training. In this study, we run 4 different tests (table ~\ref{tab:ta} ). Test 2((R), (G), 64 x 48 ), test 3(R, G, Remove Noise(RN)) and test 4(R, G, RN, Image Cropping)) modify and/or add a new preprocessing layer to their respective previous test; each preprocessing layer aiming to reduce background noise, reshape or resize the input data.
+All trainings were executed with 3 iterations (epochs = 3). Each test is shown to have a lower processing time compared to the previous one. 
+  
+  
+  Moreover the accuracy, as shown on table ~\ref{tab:ta} , gets higher when a new preprocessing layer is added.  This shows that each new preprocessing layer contributes in decreasing the processing time while increasing the accuracy of the classification. It can also be said that the classification gets more accurate with background noise cancellation, reshape and resize preprocessing seeing as the neural network architecture didn’t change over the course of this study.
+    
+    
+    Furthermore, seeing as the combined preprocessing layer in the final test (Test 4) provides the highest accuracy and lowest preprocessing time, we improve its CNN architecture by modifying the number of filters from 32 to 256 and train 3 times (epochs=3) as initially and then 10 times(epochs =10). The final result shows that with a combined set of all preprocessing layers, a high number of filters and augmented epochs, the designed CNN architecture can effectively detect and classify okras with an accuracy of 84.67\%.
+    
+    
+    In a different test designed to calculate the precision and recall (Figure ~\ref{fig:precisionrecall} ), it is shown that the precision is higher than the recall. In other words, it shows that the class A is less mistaken for class B, as class B would be mistaken for class A. It can be explained by the fact that the class B contains share some common features  with  the class A. The shape as in Figure ~\ref{fig:visuald} can be similar while the size remains slightly different. The similitude could potentially be the main reason of the low recall percentage in this study.
+The images used in this research were priorly classified manually by farmers. It has been noticed that the actual manual classification of okras do not only take the established standards. They also take into account the “color” and “pigmentation” as classification features. Thus, this classification based on each farmer’s working experience and point-of-view is the main reason the CNN algorithms have been induced in this study. The classification accuracy as well as the precision and recall could potentially grow higher if only ”shape” and “color” were the only features considered in the classification.
+
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.6]{imgs/recall.png}
+\end{center}
+\caption{Precision \& Recall}
+\label{fig:precisionrecall}
+\end{figure}
+
+
+\begin{table}
+\caption{Loss, Accuracy and time}
+\label{tab:ta}
+\begin{tabular}{|c|c|c|c|}
+\hline
+process	 				&input size   & accuracy [\%] & time [s]\\ \hline
+Resize(R), Grayscale(G)		&50 x 50	      & 79.66    & 50         \\ \hline
+Resize(R), Grayscale(G),  	&64 x 48 	      & 81.61    & 35         \\ \hline
+R, G, Remove Noise(RN)		&64 x 48 	      & 81.76    & 42         \\ \hline
+R, G, RN, Image Cropping  	&46 x 47        & 83.79    & 33         \\ \hline
+\end{tabular}
+\end{table}
+
+Optimizing the preprocessing steps has been shown to not only decrease the process time but also to
+gradually increase the accuracy. Over the preprocessing steps, adding filters allows to better discern, 
+detect the okra and reduce the noises around it. Furthermore, resizing the inputs to 1/10 of their initial 
+size compared to a standard non-relational reduction has been demonstrated to accelerate the process time
+by -30\%. 
+\section{Conclusion}
+
+In the previous years, myriad of researches have been done to bring tangible solutions based on Artificial Intelligence with Machine Learning. Agriculture is one of the domains rapidly growing with the implementation and assistance of those technologies. In present study, CNN has been combined with a set of preprocessing techniques to bring solutions to okra classification issues.
+Using a set image cropping, reshaping, resizing and background noise cancellation as preprocessing, we designed a convolutional neural network that can classify okra into 2 given categories with an accuracy of 84.67\%. Each layer of preprocessing has been shown to contribute to a better processing time while increasing at low margins the classification accuracy. Further studies will be done using a higher number of images and more consideration of “color” and “pigmentation” as features in order to achieve a higher classification accuracy. As mentioned upper, the preprocessing and CNN used in this study will lay the foundation for further studies in plant maladies classification. The algorithms used in this study will be also subject for improvement in future studies.
+
+
+
+
+\begin{thebibliography}{99}
+
+
+\bibitem{bib1}
+Mehmet Metin, Ozguven, Kemal Ademm, Automatic detection and classification of leaf spot disease in sugar beet using deep learning, Physica A 535 (2019) 122537 
+
+\bibitem{bib2}
+Muammer Turgoku, Davut Hanbay, Recognition of plant leaves: An approach with hybrid features produced by dividing leaf images into two and four parts, Applied Mathematics and Computation 352 (2019) 1–14
+
+
+\bibitem{bib3}
+Liwen Gao, Xiaohua Lin, A method for accurately segmenting images of medicinal plant leaves with complex backgrounds, Computers and Electronics in Agriculture 155 (2018) 426–445
+
+
+\bibitem{bib4}
+K. K. Thyagharajan, I. Kiruba Raji, A Review of Visual Descriptors and Classification Techniques Used in Leaf Species Identification, Archives of Computational Methods in Engineering (2019) 26:933–960, https://doi.org/10.1007/s11831-018-9266-3(0123456789().,-volV)(0123456789().,-volV)
+
+\bibitem{bib5}
+Sukhvir Kaur, Shreelekha Pandey, Shivani Goel, Plants Disease Identification and Classification Through Leaf Images: A Survey, Archives of Computational Methods in Engineering (2019) 26:507–530, https://link.springer.com/article/10.1007%2Fs11831-018-9255-6
+
+
+\bibitem{bib6}
+Muhammad Azfar Firdaus Azlah, Lee Suan Chua, Fakhrul Razan Rahmad, Farah Izana Abdullah, Sharifah Rafidah Wan Alwi, Review on Techniques for Plant Leaf Classification and Recognition, Computers 2019, 8(4), 77; https://doi.org/10.3390/computers8040077
+
+
+\bibitem{bib7}
+M. Vilasini, P. Ramamoorthy, CNN Approaches for Classification of Indian Leaf Species Using Smartphones, Computers, Materials \& Continua, CMC, vol.62, no.3, pp.1445-1472, 2020
+
+
+\bibitem{bib8}
+Masoud Fathi Kazerouni, Nazeer T. Mohammed Saeed, Klaus‐Dieter Kuhnert, Fully‐automatic natural plant recognition system using deep neural network for dynamic outdoor environments, SN Applied Sciences (2019) 1:756 | https://doi.org/10.1007/s42452-019-0785-9
+\end{thebibliography}
+
+%Add senegal agriculture, watering techniques, soil or fertilizer amount%
+
+\end{document}
